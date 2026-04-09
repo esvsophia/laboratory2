@@ -1,38 +1,33 @@
 package org.example.model;
 
-import java.util.List;
+import com.fasterxml.jackson.annotation.JsonAnyGetter;
+import com.fasterxml.jackson.annotation.JsonAnySetter;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Mission {
     private String missionId;
-    private String outcome;
     private String date;
     private String location;
-    private int damageCost;
+    private String outcome;
     private Curse curse;
-    private List<Sorcerer> sorcerers;
-    private List<Technique> techniques;
-    private String comment;
-
-    public Mission() {}
+    private Map<String, Object> extraFields = new HashMap<>();
 
     public String getMissionId() { return missionId; }
+    public String getDate() { return date; }
+    public String getLocation() { return location; }
     public String getOutcome() { return outcome; }
     public Curse getCurse() { return curse; }
-    public List<Sorcerer> getSorcerers() { return sorcerers; }
-    public List<Technique> getTechniques() { return techniques; }
-    public String getComment() { return comment; }
-    public int getDamageCost() { return damageCost;}
-    public String getLocation() { return location;}
-    public String getDate() { return date; }
 
     public void setMissionId(String missionId) { this.missionId = missionId; }
-    public void setOutcome(String outcome) { this.outcome = outcome; }
-    public void setCurse(String name, String threatLevel) { this.curse = new Curse(name, threatLevel); }
-
-    public void setSorcerers(List<Sorcerer> sorcerers) { this.sorcerers = sorcerers; }
-    public void setTechniques(List<Technique> techniques) { this.techniques = techniques; }
-    public void setComment(String comment) { this.comment = comment; }
-    public void setDamageCost(int damageCost) { this.damageCost = damageCost; }
+    public void setDate(String date) { this.date = date; }
     public void setLocation(String location) { this.location = location; }
-    public void setDate(String date) { this.date = date;}
+    public void setOutcome(String outcome) { this.outcome = outcome; }
+    public void setCurse(Curse curse) { this.curse = curse; }
+
+    @JsonAnyGetter
+    public Map<String, Object> getExtraFields() { return extraFields; }
+
+    @JsonAnySetter
+    public void addField(String name, Object value) { extraFields.put(name, value); }
 }
