@@ -1,8 +1,11 @@
 package org.example;
 
 import org.example.model.Mission;
-import org.example.model.Technique;
-import org.example.parser.MissionReader;
+import org.example.output.Summary;
+import org.example.output.SummBase;
+import org.example.output.SummExtra;
+import org.example.parser.IMissionParser;
+import org.example.parser.ParserFactory;
 
 import javax.swing.*;
 import java.awt.*;
@@ -11,7 +14,6 @@ import java.io.File;
 public class GUI extends JFrame {
     private JTextArea textArea = new JTextArea();
     private JLabel statusLabel = new JLabel("Готов к работе");
-    private MissionReader reader = new MissionReader();
 
     public GUI() {
         setTitle("Анализатор миссий");
@@ -26,7 +28,7 @@ public class GUI extends JFrame {
             FileDialog dialog = new FileDialog(this, "Открыть", FileDialog.LOAD);
             dialog.setVisible(true);
             if (dialog.getFile() != null) {
-                loadMission(new File(dialog.getDirectory() + dialog.getFile()));
+                loadMission(dialog.getDirectory() + dialog.getFile());
             }
         });
 
@@ -43,47 +45,18 @@ public class GUI extends JFrame {
         add(bottomPanel, BorderLayout.SOUTH);
     }
 
-    private void loadMission(File file) {
+    private void loadMission(String filePath) {
         try {
-            Mission m = reader.read(file);
-            String comment;
-            if (m.getComment().isEmpty()) {
-                comment = "";
-            } else {
-                comment = m.getComment();
-            }
+            IMissionParser parser = ParserFactory.getParser(filePath);
+            Mission mission = parser.loadMission(filePath);
 
-            String text = "ID миссии: " + m.getMissionId() + "\n" +
-                    "Дата: " + m.getDate() + "\n" +
-                    "Локация: " + m.getLocation() + "\n" +
-                    "Результат: " + m.getOutcome() + "\n" +
-                    "Ущерб: " + m.getDamageCost() + "\n" +
-                    "Цель: " + m.getCurse() + "\n" +
-                    "Комментарий: " + comment + "\n\n" +
-                    "Участники:\n";
+            Summary summary = new SummBase(mission);
+            summary = new SummExtra(summary, mission);
 
-            if (m.getSorcerers() != null) {
-                for (int i = 0; i < m.getSorcerers().size(); i++) {
-                    text += (i + 1) + ") " + m.getSorcerers().get(i) + "\n";
-                }
-            }
-
-            text += "\nТехники:\n";
-            if (m.getTechniques() != null) {
-                for (int i = 0; i < m.getTechniques().size(); i++) {
-                    Technique t = m.getTechniques().get(i);
-                    text += (i + 1) + ") " + t.getName() + " [Тип: " + t.getType() +
-                            ", Владелец: " + t.getOwner() + ", Урон: " + t.getDamage() + "]\n";
-                }
-            }
-
-            textArea.setText(text);
-            statusLabel.setText("Загружен: " + file.getName());
+            textArea.setText(summary.getSummary());
+            statusLabel.setText("Загружен: " + new File(filePath).getName());
         } catch (Exception e) {
             textArea.setText("Ошибка: " + e.getMessage());
         }
     }
-
-
 }
-
