@@ -1,5 +1,9 @@
 package org.example;
 
+import org.example.model.Mission;
+import org.example.model.Technique;
+import org.example.parser.MissionReader;
+
 import javax.swing.*;
 import java.awt.*;
 import java.io.File;

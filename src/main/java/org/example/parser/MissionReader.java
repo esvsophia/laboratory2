@@ -1,13 +1,12 @@
-package org.example;
+package org.example.parser;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.example.Mission;
-import org.example.Sorcerer;
-import org.example.Technique;
+import org.example.model.Mission;
+import org.example.model.Sorcerer;
+import org.example.model.Technique;
 import org.w3c.dom.*;
 import javax.xml.parsers.*;
-import javax.xml.transform.Source;
 import java.io.*;
 import java.util.*;
 
