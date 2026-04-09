@@ -1,5 +1,4 @@
-package org.example;import org.example.GUI;
-
+package org.example;
 import javax.swing.*;
 
 public class Main {
