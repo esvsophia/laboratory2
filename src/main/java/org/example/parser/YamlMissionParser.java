@@ -50,7 +50,6 @@ public class YamlMissionParser implements IMissionParser {
 
                 } else if (indent == 2) {
                     if (trimmed.startsWith("- ")) {
-                        // Новый элемент списка
                         if (currentListItem != null && currentList != null) {
                             currentList.add(new HashMap<>(currentListItem));
                         }
