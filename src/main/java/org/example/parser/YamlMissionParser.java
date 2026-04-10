@@ -24,17 +24,14 @@ public class YamlMissionParser implements IMissionParser {
                 String trimmed = line.trim();
 
                 if (indent == 0) {
-                    // Сохраняем предыдущий элемент списка
                     if (currentListItem != null && currentList != null) {
                         currentList.add(new HashMap<>(currentListItem));
                         currentListItem = null;
                     }
-                    // Сохраняем предыдущий список
                     if (currentList != null) {
                         mission.addField(currentBlockName, new ArrayList<>(currentList));
                         currentList = null;
                     }
-                    // Сохраняем предыдущий блок
                     if (currentBlock != null) {
                         saveBlock(mission, currentBlockName, currentBlock);
                         currentBlock = null;
@@ -71,7 +68,6 @@ public class YamlMissionParser implements IMissionParser {
                             currentListItem.put(key, value);
                         }
                     } else {
-                        // Поле блока
                         if (currentBlock == null) {
                             currentBlock = new HashMap<>();
                         }
@@ -83,7 +79,6 @@ public class YamlMissionParser implements IMissionParser {
                     }
 
                 } else if (indent == 4) {
-                    // Поле внутри элемента списка
                     if (currentListItem != null) {
                         int sep = trimmed.indexOf(':');
                         if (sep == -1) continue;
@@ -94,7 +89,6 @@ public class YamlMissionParser implements IMissionParser {
                 }
             }
 
-            // Сохраняем последнее
             if (currentListItem != null && currentList != null) {
                 currentList.add(new HashMap<>(currentListItem));
             }
